@@ -11,7 +11,7 @@ namespace Rules_Lawyer
 
                 List<string> foundSentences = new List<string>();
 
-            Console.WriteLine("");
+          
 
 
                 Menu(foundSentences);
