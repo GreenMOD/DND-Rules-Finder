@@ -7,14 +7,30 @@ namespace Rules_Lawyer
     {
         static void Main(string[] args)
         {
+            StreamReader rulesLawyer = new StreamReader(File.Open("DND_RULES.txt", FileMode.Open));
+            List<string> Sentences = new List<string>();
+            while (rulesLawyer.EndOfStream != true)
+            {
+                string currentLine = rulesLawyer.ReadLine();
 
 
-                List<string> foundSentences = new List<string>();
+
+                Sentences.Add(currentLine);
+
+            }
+            rulesLawyer.Close();
+
+
+
+
+
+            
+            List<string> foundSentences = new List<string>();
 
           
 
 
-                Menu(foundSentences);
+                Menu(Sentences);
 
 
             }
@@ -96,7 +112,7 @@ namespace Rules_Lawyer
                 }
             }
 
-            public static void Menu(List<string> foundSentences)
+            public static void Menu(List<string> Sentences)
             {
                 Console.WriteLine("Hello and Welcome to the DND portal");
                 Console.WriteLine("Functions");
@@ -107,7 +123,7 @@ namespace Rules_Lawyer
                 switch (userAction)
                 {
                     case "1":
-                        findSubject(foundSentences);
+                        UpdateSearch(Sentences);
                         break;
                     case "2":
                         Console.WriteLine("This is currently unavaliable");
@@ -118,7 +134,7 @@ namespace Rules_Lawyer
                     default:
                         Console.WriteLine("Error please enter again");
                         Console.Clear();
-                        Menu(foundSentences);
+                        Menu(Sentences);
                         break;
                 }
             }
@@ -157,6 +173,74 @@ namespace Rules_Lawyer
 
                 Console.WriteLine(rand.Next(0, 20));
             }
+        public static void UpdateSearch(List<string>Sentences)
+        {
+            List<string> foundSentences = new List<string>();
+            List<int> foundAt = new List<int>();
+            StreamReader rulesLawyer = new StreamReader(File.Open("DND_RULES.txt", FileMode.Open));
+            Console.WriteLine("Please input subject you would like to know about");
+            int count = 0;
+            string subject = Console.ReadLine();
+
+            for (int i = 0; i < Sentences.Count; i++)
+            {
+                if (Sentences[i].Contains(subject))
+                {
+                    foundSentences.Add(Sentences[i]);
+                    foundAt.Add(i);
+                    count++;
+                }
+            }
+                
+            Console.WriteLine("Found "+ foundSentences.Count);
+            Console.WriteLine("Please enter the number at which you would like to start reading at:");
+           
+            for (int i = 0; i < foundSentences.Count; i++)
+            {
+                Console.WriteLine(i+ ": "+ foundSentences[i]);
+            }
+            int numIndex = int.Parse(Console.ReadLine());
+            while (numIndex < 0 || numIndex > foundSentences.Count)
+            {
+                Console.WriteLine("Error please enter number to start reading at again.");
+                numIndex = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine(foundSentences[numIndex].ToString());
+              numIndex= foundAt[numIndex];
+            ReadMore(Sentences,numIndex);
+           }
+        public static void ReadMore(List<string> Sentences, int start)
+        {
+            Console.WriteLine("Would you like to read more?");
+            string response = Console.ReadLine();
+            if (response == "Y")
+            {
+                Console.WriteLine("Please enter number of sentences you want to read for.");
+                int numSentences = int.Parse(Console.ReadLine());
+
+                for (int i = 0; i < numSentences; i++)
+                {
+                    Console.WriteLine(Sentences[i+start].ToString());
+                }
+            }
+            else if (response == "N")
+            {
+                Menu(Sentences);
+            }
+            else
+            {
+                Console.WriteLine("Your response must be Y or N");
+                ReadMore(Sentences, start);
+            }
+
+
+
+
+
+
+
+
+        }
         }
     }
 
